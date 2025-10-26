@@ -7,12 +7,17 @@ import datetime as dt
 
 # ---------------- Streamlit Page Setup ----------------
 st.set_page_config(page_title="CSV/XLSX Comparator", layout="wide")
-username = getpass.getuser()
-print(f"Current username: {username}")
-st.title("📊 CSV / Excel File Comparator")
 
-st.markdown(f"👤 **Current User:** `{username}`")
+developer_name = "Sumit Sharma"
 
+# Create two columns: left for developer name, right for title
+col1, col2 = st.columns([1, 6])  # adjust width ratio
+
+with col1:
+    st.markdown(f"**👤 {developer_name}**")  # bold developer name top-left
+
+with col2:
+    st.title("📊 CSV / Excel File Comparator")
 
 # ---------------- Session State Initialization ----------------
 if "diff_df" not in st.session_state:
@@ -72,6 +77,10 @@ if st.button("Compare Files"):
         # Store differences in session_state
         st.session_state.diff_df = pd.DataFrame(diff_rows, columns=df1.columns)
 
+        # Show message if no differences found
+        if st.session_state.diff_df.empty:
+            st.info("✅ No differences found between the two files!")
+
 # ---------------- Display Differences ----------------
 if not st.session_state.diff_df.empty:
     st.subheader("Differences")
@@ -91,6 +100,6 @@ if not st.session_state.diff_df.empty:
     st.download_button(
         label="📥 Download Differences",
         data=output,
-        file_name="differences.csv",
+        file_name="differences.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
