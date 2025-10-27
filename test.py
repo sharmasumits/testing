@@ -13,13 +13,14 @@ st.set_page_config(page_title="CSV/XLSX Comparator", layout="wide")
 pd.set_option("styler.render.max_elements", 5_000_000)  # allow up to 5 million cells
 
 developer_name = "Sumit"
+developer_name2 = "prince"
 
 # Create two columns: left for developer name, right for title
 col1, col2 = st.columns([1, 6])
 
 with col1:
     st.markdown(f"**👤 {developer_name}**")  # bold developer name top-left
-
+ 
 with col2:
     st.title("📊 CSV / Excel File Comparator")
 
@@ -43,7 +44,7 @@ if file1:
     else:
         df1 = pd.read_excel(file1, engine="openpyxl")
     st.subheader("File 1 Preview")
-    st.dataframe(df1.head(100))  # show only first 100 rows for performance
+    st.dataframe(df1)  # show only first 100 rows for performance
 
 # ---------------- Load File 2 ----------------
 if file2:
@@ -52,8 +53,7 @@ if file2:
     else:
         df2 = pd.read_excel(file2, engine="openpyxl")
     st.subheader("File 2 Preview")
-    st.dataframe(df2.head(100))
-
+    st.dataframe(df2)
 # ---------------- Compare Button ----------------
 if st.button("Compare Files"):
     if df1.empty or df2.empty:
@@ -93,7 +93,7 @@ if not st.session_state.diff_df.empty:
         return ""
 
     # ✅ Use styler limit fix and also prevent heavy UI lag by truncating view
-    st.dataframe(st.session_state.diff_df.head(500).style.applymap(highlight_diff))
+    st.dataframe(st.session_state.diff_df.style.applymap(highlight_diff))
 
     # ---------------- Download Button ----------------
     output = BytesIO()
