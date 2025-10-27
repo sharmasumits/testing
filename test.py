@@ -8,10 +8,13 @@ import datetime as dt
 # ---------------- Streamlit Page Setup ----------------
 st.set_page_config(page_title="CSV/XLSX Comparator", layout="wide")
 
+# ✅ Increase Pandas Styler render limit (fixes your error)
+pd.set_option("styler.render.max_elements", 5_000_000)  # allow up to 5 million cells
+
 developer_name = "Sumit Sharma"
 
 # Create two columns: left for developer name, right for title
-col1, col2 = st.columns([1, 6])  # adjust width ratio
+col1, col2 = st.columns([1, 6])
 
 with col1:
     st.markdown(f"**👤 {developer_name}**")  # bold developer name top-left
@@ -39,7 +42,7 @@ if file1:
     else:
         df1 = pd.read_excel(file1, engine="openpyxl")
     st.subheader("File 1 Preview")
-    st.dataframe(df1)
+    st.dataframe(df1.head(100))  # show only first 100 rows for performance
 
 # ---------------- Load File 2 ----------------
 if file2:
@@ -48,7 +51,7 @@ if file2:
     else:
         df2 = pd.read_excel(file2, engine="openpyxl")
     st.subheader("File 2 Preview")
-    st.dataframe(df2)
+    st.dataframe(df2.head(100))
 
 # ---------------- Compare Button ----------------
 if st.button("Compare Files"):
@@ -74,10 +77,8 @@ if st.button("Compare Files"):
             if any("→" in str(v) for v in diff_row):
                 diff_rows.append(diff_row)
 
-        # Store differences in session_state
         st.session_state.diff_df = pd.DataFrame(diff_rows, columns=df1.columns)
 
-        # Show message if no differences found
         if st.session_state.diff_df.empty:
             st.info("✅ No differences found between the two files!")
 
@@ -85,13 +86,13 @@ if st.button("Compare Files"):
 if not st.session_state.diff_df.empty:
     st.subheader("Differences")
 
-    # Styling function for red highlight
     def highlight_diff(val):
         if "→" in str(val):
-            return "background-color: #ffcccc"  # light red
+            return "background-color: #ffcccc"
         return ""
 
-    st.dataframe(st.session_state.diff_df.style.applymap(highlight_diff))
+    # ✅ Use styler limit fix and also prevent heavy UI lag by truncating view
+    st.dataframe(st.session_state.diff_df.head(500).style.applymap(highlight_diff))
 
     # ---------------- Download Button ----------------
     output = BytesIO()
