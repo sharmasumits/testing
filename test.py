@@ -13,20 +13,22 @@ st.set_page_config(page_title="CSV/XLSX Comparator", layout="wide")
 pd.set_option("styler.render.max_elements", 5_000_000)  # allow up to 5 million cells
 
 developer_name = "Sumit"
-developer_name2 = "prince"
+developer_name2 = "Shruti"
 
 # Create two columns: left for developer name, right for title
 col1, col2 = st.columns([1, 6])
 
 with col1:
     st.markdown(f"**👤 {developer_name}**")  # bold developer name top-left
- 
+    st.markdown(f"**👤 {developer_name2}**")  # bold developer name top-left
+
 with col2:
     st.title("📊 CSV / Excel File Comparator")
 
 # ---------------- Session State Initialization ----------------
 if "diff_df" not in st.session_state:
     st.session_state.diff_df = pd.DataFrame()
+
 
 # ---------------- File Type Selection ----------------
 file_type = st.selectbox("Select File Type", ["CSV", "XLSX", "XLS"])
