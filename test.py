@@ -8,10 +8,11 @@ import datetime as dt
 # ---------------- Streamlit Page Setup ----------------
 st.set_page_config(page_title="CSV/XLSX Comparator", layout="wide")
 
+
 # ✅ Increase Pandas Styler render limit (fixes your error)
 pd.set_option("styler.render.max_elements", 5_000_000)  # allow up to 5 million cells
 
-developer_name = "Sumit Sharma"
+developer_name = "Sumit"
 
 # Create two columns: left for developer name, right for title
 col1, col2 = st.columns([1, 6])
