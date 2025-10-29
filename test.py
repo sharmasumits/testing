@@ -15,7 +15,7 @@ developer_name2 = "Shruti"
 col1, col2 = st.columns([1, 6])
 with col1:
     st.markdown(f"**👤 {developer_name}**")
-    st.markdown(f"**👤 {developer_name2}**")
+
 with col2:
     st.title("📊 CSV / Excel File Comparator")
 
