@@ -3,6 +3,8 @@ import streamlit as st
 from io import BytesIO
 import os
 
+
+
 # ---------------- Streamlit Page Setup ----------------
 st.set_page_config(page_title="CSV/XLSX Comparator", layout="wide")
 pd.set_option("styler.render.max_elements", 5_000_000)
@@ -58,30 +60,30 @@ if st.button("Compare Files"):
         st.info("🔍 Comparing files, please wait...")
         progress = st.progress(0)
 
-        # ✅ Align the sizes
+        #   Align the sizes
         max_len = max(len(df1), len(df2))
         df1 = df1.reindex(range(max_len)).reset_index(drop=True)
         df2 = df2.reindex(range(max_len)).reset_index(drop=True)
 
-        # ✅ Fast vectorized comparison
+        #   Fast vectorized comparison
         diff_mask = (df1 != df2) & ~(df1.isna() & df2.isna())
 
-        # ✅ Build result efficiently
+        #   Build result efficiently
         diff_df = df1.copy()
         for col in df1.columns:
             diff_col = diff_mask[col]
             diff_df.loc[diff_col, col] = df1[col].astype(str) + " → " + df2[col].astype(str)
 
-        # ✅ Keep only changed rows
+        #   Keep only changed rows
         diff_df = diff_df.loc[diff_mask.any(axis=1)]
 
         st.session_state.diff_df = diff_df
         progress.progress(100)
 
         if diff_df.empty:
-            st.info("✅ No differences found!")
+            st.info("  No differences found!")
         else:
-            st.success(f"✅ Found {len(diff_df)} differing rows!")
+            st.success(f"  Found {len(diff_df)} differing rows!")
 
 # ---------------- Display Differences ----------------
 if not st.session_state.diff_df.empty:
@@ -102,3 +104,4 @@ if not st.session_state.diff_df.empty:
         file_name="differences.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
